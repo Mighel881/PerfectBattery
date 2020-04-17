@@ -1,4 +1,4 @@
-@interface _UIBatteryView : UIView
+@interface _UIBatteryView: UIView
 @property NSInteger chargingState;
 @property CGFloat chargePercent;
 @property BOOL saverModeActive;
@@ -8,5 +8,5 @@
 - (void)updatePercentageColor;
 @end
 
-@interface _UIStaticBatteryView : _UIBatteryView
+@interface _UIStaticBatteryView: _UIBatteryView
 @end

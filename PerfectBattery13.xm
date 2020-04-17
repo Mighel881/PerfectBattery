@@ -1,20 +1,28 @@
 #import "PerfectBattery13.h"
 
-// --------------------------------------------------------------------------
-// ------------------------------ CONSTANTS ---------------------------------
-// --------------------------------------------------------------------------
+#import <Cephei/HBPreferences.h>
+#import "SparkColourPickerUtils.h"
 
-UIColor *const GREEN_BATTERY_COLOR = [UIColor colorWithRed: 0.15 green: 0.68 blue: 0.38 alpha: 1.0f];
-UIColor *const YELLOW_BATTERY_COLOR = [UIColor colorWithRed: 0.95 green: 0.77 blue: 0.06 alpha: 1.0f];
-UIColor *const ORANGE_BATTERY_COLOR = [UIColor colorWithRed: 0.90 green: 0.49 blue: 0.13 alpha: 1.0f];
-UIColor *const RED_BATTERY_COLOR = [UIColor colorWithRed: 0.91 green: 0.30 blue: 0.24 alpha: 1.0f];
+static HBPreferences *pref;
+static BOOL enabled;
+static long fontSize;
+static BOOL boldFont;
+static BOOL showPercentSymbol;
+static BOOL customDefaultColorEnabled;
+static UIColor *customDefaultColor;
+static UIColor *chargingColor;
+static UIColor *lowPowerModeColor;
+static UIColor *lowBattery1Color;
+static UIColor *lowBattery2Color;
+
+static NSString *percentSymbol;
 
 // Hide duplicate percentage label from control center
 %hook _UIStatusBarStringView
 
-- (void)setText: (NSString *)text
+- (void)setText: (NSString*)text
 {
-    if(![text containsString:@"%"] && ![text containsString:@"Not Charging"]) %orig(text);
+    if(![text containsString: @"%"]) %orig;
 }
 
 %end
@@ -25,16 +33,17 @@ UIColor *const RED_BATTERY_COLOR = [UIColor colorWithRed: 0.91 green: 0.30 blue:
 %property (nonatomic, retain) UILabel *percentLabel;
 %property (nonatomic, retain) UIColor *backupFillColor;
 
-- (instancetype)initWithFrame: (CGRect)frame
+- (id)initWithFrame: (CGRect)frame
 {
 	self = %orig;
 	
-	self.percentLabel = [[UILabel alloc]initWithFrame: CGRectMake(0, 0, 40, 12)];
-	self.percentLabel.font = [UIFont boldSystemFontOfSize: 14];
-	self.percentLabel.adjustsFontSizeToFitWidth = YES;
-	self.percentLabel.textAlignment = NSTextAlignmentLeft;
-	self.percentLabel.text = [NSString stringWithFormat:@"%.0f%%", floor(self.chargePercent * 100)];
-	[self addSubview: self.percentLabel];
+	[self setPercentLabel: [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 40, 12)]];
+	if(boldFont) [[self percentLabel] setFont: [UIFont boldSystemFontOfSize: fontSize]];
+	else [[self percentLabel] setFont: [UIFont systemFontOfSize: fontSize]];
+	[[self percentLabel] setAdjustsFontSizeToFitWidth: YES];
+	[[self percentLabel] setTextAlignment: NSTextAlignmentLeft];
+	[[self percentLabel] setText: [NSString stringWithFormat:@"%.0f%@", floor(self.chargePercent * 100), percentSymbol]];
+	[self addSubview: [self percentLabel]];
 
 	return self;
 }
@@ -42,29 +51,30 @@ UIColor *const RED_BATTERY_COLOR = [UIColor colorWithRed: 0.91 green: 0.30 blue:
 - (void)setChargePercent: (CGFloat)percent
 {
 	%orig;    
-	self.percentLabel.text = [NSString stringWithFormat:@"%.0f%%", floor(percent * 100)];
+	[[self percentLabel] setText: [NSString stringWithFormat:@"%.0f%@", floor(percent * 100), percentSymbol]];
 }
 
 // Update percentage label color in various events
 %new
 - (void)updatePercentageColor
 {
-	if (self.chargingState != 0) self.percentLabel.textColor = GREEN_BATTERY_COLOR;
-	else if (self.saverModeActive) self.percentLabel.textColor = YELLOW_BATTERY_COLOR;
-	else if (self.chargePercent <= 0.15) self.percentLabel.textColor = RED_BATTERY_COLOR;
-	else if (self.chargePercent <= 0.25) self.percentLabel.textColor = ORANGE_BATTERY_COLOR;
-	else self.percentLabel.textColor = self.backupFillColor;
+	if([self chargingState] != 0) [[self percentLabel] setTextColor: chargingColor];
+	else if([self saverModeActive]) [[self percentLabel] setTextColor: lowPowerModeColor];
+	else if([self chargePercent] <= 0.15) [[self percentLabel] setTextColor: lowBattery2Color];
+	else if([self chargePercent] <= 0.25) [[self percentLabel] setTextColor: lowBattery1Color];
+	else if(customDefaultColorEnabled) [[self percentLabel] setTextColor: customDefaultColor];
+	else [[self percentLabel] setTextColor: [self backupFillColor]];
 }
 
 - (void)setChargingState: (long long)arg1
 {
-	%orig(arg1);
+	%orig;
 	[self updatePercentageColor];
 }
 
 - (void)setSaverModeActive: (BOOL)arg1
 {
-	%orig(arg1);
+	%orig;
 	[self updatePercentageColor];
 }
 
@@ -91,58 +101,85 @@ UIColor *const RED_BATTERY_COLOR = [UIColor colorWithRed: 0.91 green: 0.30 blue:
 }
 
 // Return clear fill color but keep a backup of it
-- (void)setFillColor: (UIColor *)arg1
+- (void)setFillColor: (UIColor*)arg1
 {
-	self.backupFillColor = arg1;
+	[self setBackupFillColor: arg1];
 	%orig([UIColor clearColor]);
 }
 
-- (UIColor *)fillColor
+- (UIColor*)fillColor
 {
 	return [UIColor clearColor];
 }
 
 // Hide body component completely
-- (void)setBodyColor:(UIColor *)arg1
+- (void)setBodyColor: (UIColor*)arg1
 {
 	%orig([UIColor clearColor]);
 }
 
-- (UIColor *)bodyColor
+- (UIColor*)bodyColor
 {
 	return [UIColor clearColor];
 }
 
 // Hide pin component completely
-- (void)setPinColor:(UIColor *)arg1
+- (void)setPinColor: (UIColor*)arg1
 {
 	%orig([UIColor clearColor]);
 }
 
-- (UIColor *)pinColor
+- (UIColor*)pinColor
 {
 	return [UIColor clearColor];
 }
 
-- (CAShapeLayer *)pinShapeLayer
+- (CAShapeLayer*)pinShapeLayer
 {
 	return nil;
 }
 
 // Hide bolt symbol while charging
-- (void)setShowsInlineChargingIndicator:(BOOL)showing
+- (void)setShowsInlineChargingIndicator: (BOOL)showing
 {
 	%orig(NO);
 }
 
 %end
 
-// Always show orange color when on control center
-%hook _UIStaticBatteryView
-
-- (void)updatePercentageColor
+%ctor
 {
-	self.percentLabel.textColor = ORANGE_BATTERY_COLOR;
-}
+	@autoreleasepool
+	{
+		pref = [[HBPreferences alloc] initWithIdentifier: @"com.johnzaro.perfectbattery13prefs"];
+		[pref registerDefaults:
+		@{
+			@"enabled": @NO,
+			@"fontSize": @14,
+			@"boldFont": @NO,
+			@"showPercentSymbol": @NO,
+			@"customDefaultColorEnabled": @NO,
+    	}];
 
-%end
+		enabled = [pref boolForKey: @"enabled"];
+		if(enabled)
+		{
+			fontSize = [pref integerForKey: @"fontSize"];
+			boldFont = [pref boolForKey: @"boldFont"];
+			showPercentSymbol = [pref boolForKey: @"showPercentSymbol"];
+
+			if(showPercentSymbol) percentSymbol = @"%";
+			else percentSymbol = @"";
+
+			NSDictionary *preferencesDictionary = [NSDictionary dictionaryWithContentsOfFile: @"/var/mobile/Library/Preferences/com.johnzaro.perfectbattery13prefs.colors.plist"];
+			
+			customDefaultColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"customDefaultColor"] withFallback: @"#FF9400"];
+			chargingColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"chargingColor"] withFallback: @"#26AD61"];
+			lowPowerModeColor = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"lowPowerModeColor"] withFallback: @"#F2C40F"];
+			lowBattery1Color = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"lowBattery1Color"] withFallback: @"#E57C21"];
+			lowBattery2Color = [SparkColourPickerUtils colourWithString: [preferencesDictionary objectForKey: @"lowBattery2Color"] withFallback: @"#E84C3D"];
+			
+			%init;
+		}
+	}
+}
