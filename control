@@ -1,7 +1,7 @@
 Package: com.johnzaro.perfectbattery13
 Name: PerfectBattery13
-Depends: mobilesubstrate, com.spark.libsparkcolourpicker, preferenceloader, ws.hbang.common (>= 1.14), firmware (>= 13)
-Version: 1.1
+Depends: mobilesubstrate, com.spark.libsparkapplist, com.spark.libsparkcolourpicker, preferenceloader, ws.hbang.common (>= 1.14), firmware (>= 13)
+Version: 1.2
 Architecture: iphoneos-arm
 Description: Removes Battery Icon and adds Battery percentage label for nothced iPhones
 Maintainer: Johnzaro <johnzrgnns@gmail.com>

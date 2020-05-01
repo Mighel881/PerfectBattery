@@ -7,9 +7,9 @@ BUNDLE_NAME = PerfectBattery13Prefs
 PerfectBattery13Prefs_FILES = PBTAppearanceSettings.m PBTRootHeaderView.mm PBTRootListController.xm
 PerfectBattery13Prefs_INSTALL_PATH = /Library/PreferenceBundles
 PerfectBattery13Prefs_FRAMEWORKS = UIKit
-PerfectBattery13Prefs_PRIVATE_FRAMEWORKS = Preferences
-PerfectBattery13Prefs_LIBRARIES = sparkcolourpicker
-PerfectBattery13Prefs_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
+PerfectBattery13Prefs_PRIVATE_FRAMEWORKS += Preferences
+PerfectBattery13Prefs_LIBRARIES += sparkcolourpicker sparkapplist
+PerfectBattery13Prefs_CFLAGS += -fobjc-arc -Wno-deprecated-declarations
 PerfectBattery13Prefs_EXTRA_FRAMEWORKS = Cephei CepheiPrefs
 
 include $(THEOS_MAKE_PATH)/bundle.mk

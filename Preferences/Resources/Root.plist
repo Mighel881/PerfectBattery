@@ -32,7 +32,125 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Font</string>
+			<string>DOUBLE TAP ACTION</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>default</key>
+			<integer>0</integer>
+			<key>defaults</key>
+			<string>com.johnzaro.perfectbattery13prefs</string>
+			<key>key</key>
+			<string>doubleTapAction</string>
+			<key>validTitles</key>
+			<array>
+      			<string>None</string>
+      			<string>Switch LPM</string>
+      			<string>Open Battery Page</string>
+      			<string>Open App</string>
+			</array>
+      		<key>validValues</key>
+			<array>
+      			<string>0</string>
+      			<string>1</string>
+      			<string>2</string>
+      			<string>3</string>
+			</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Select App To Open On Double Tap</string>
+			<key>action</key>
+			<string>selectDoubleTapApp</string>
+   	 	</dict>
+			<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>HOLD ACTION</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>default</key>
+			<integer>0</integer>
+			<key>defaults</key>
+			<string>com.johnzaro.perfectbattery13prefs</string>
+			<key>key</key>
+			<string>holdAction</string>
+			<key>validTitles</key>
+			<array>
+      			<string>None</string>
+      			<string>Switch LPM</string>
+      			<string>Open Battery Page</string>
+      			<string>Open App</string>
+			</array>
+      		<key>validValues</key>
+			<array>
+      			<string>0</string>
+      			<string>1</string>
+      			<string>2</string>
+      			<string>3</string>
+			</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Select App To Open On Hold</string>
+			<key>action</key>
+			<string>selectHoldApp</string>
+   	 	</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>PERCENTAGE LABEL - STYLE</string>
+			<key>footerText</key>
+			<string>'HIDDEN' OPTION LEAVES THE DEFAULT BATTERY UNCHANGED.
+			
+'INSIDE BATTERY ICON' OPTION SHOWS BATTERY PERCENTAGE INSIDE THE BATTERY ICON.
+
+'REPLACE BATTERY ICON' OPTION HIDES THE BATTERY ICON AND SHOWS A PERCENTAGE LABEL INSTEAD.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>default</key>
+			<integer>0</integer>
+			<key>defaults</key>
+			<string>com.johnzaro.perfectbattery13prefs</string>
+			<key>key</key>
+			<string>style</string>
+			<key>validTitles</key>
+			<array>
+      			<string>Hidden</string>
+      			<string>Inside Battery Icon</string>
+      			<string>Replace Battery Icon</string>
+			</array>
+      		<key>validValues</key>
+			<array>
+      			<string>0</string>
+      			<string>1</string>
+      			<string>2</string>
+			</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>THE FOLLOWING SETTINGS ARE APPLIED ONLY FOR THE 'REPLACE BATTERY ICON' MODE</string>
+			<key>alignment</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>FONT</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -174,7 +292,7 @@
 				<false/>
 			</dict>
 			<key>label</key>
-			<string>Low Battery #1 (&lt; 25%)</string>
+			<string>Low Battery (&lt; 25%)</string>
 			<key>key</key>
 			<string>lowBattery1Color</string>
 		</dict>
@@ -195,7 +313,7 @@
 				<false/>
 			</dict>
 			<key>label</key>
-			<string>Low Battery #2 (&lt; 15%)</string>
+			<string>Low Battery (&lt; 15%)</string>
 			<key>key</key>
 			<string>lowBattery2Color</string>
 		</dict>

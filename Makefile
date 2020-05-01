@@ -9,8 +9,8 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = PerfectBattery13
 PerfectBattery13_FILES = PerfectBattery13.xm
-PerfectBattery13_CFLAGS = -fobjc-arc
-PerfectBattery13_LIBRARIES = sparkcolourpicker
+PerfectBattery13_CFLAGS += -fobjc-arc -Wno-deprecated-declarations
+PerfectBattery13_LIBRARIES += sparkcolourpicker sparkapplist
 PerfectBattery13_EXTRA_FRAMEWORKS += Cephei
 
 include $(THEOS_MAKE_PATH)/tweak.mk
