@@ -7,11 +7,11 @@ GO_EASY_ON_ME = 1
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = PerfectBattery13
-PerfectBattery13_FILES = PerfectBattery13.xm
-PerfectBattery13_CFLAGS += -fobjc-arc -Wno-deprecated-declarations
-PerfectBattery13_LIBRARIES += sparkcolourpicker sparkapplist
-PerfectBattery13_EXTRA_FRAMEWORKS += Cephei
+TWEAK_NAME = PerfectBattery
+PerfectBattery_FILES = PerfectBattery.xm
+PerfectBattery_CFLAGS += -fobjc-arc -Wno-deprecated-declarations
+PerfectBattery_LIBRARIES += sparkcolourpicker sparkapplist
+PerfectBattery_EXTRA_FRAMEWORKS += Cephei
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>PerfectBattery13Prefs</string>
+	<string>PerfectBatteryPrefs</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.johnzaro.perfectbattery13prefs</string>
 	<key>CFBundleInfoDictionaryVersion</key>

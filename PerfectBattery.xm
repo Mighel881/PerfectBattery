@@ -1,5 +1,4 @@
-#import "PerfectBattery13.h"
-
+#import "PerfectBattery.h"
 #import <Cephei/HBPreferences.h>
 #import "SparkColourPickerUtils.h"
 #import "SparkAppList.h"
@@ -162,7 +161,7 @@ static void openApp(NSString *identifier)
 
 	- (void)setChargePercent: (CGFloat)percent
 	{
-		%orig;    
+		%orig;
 		[[self percentLabel] setText: [NSString stringWithFormat:@"%.0f%@", floor(percent * 100), percentSymbol]];
 	}
 
